@@ -5,11 +5,9 @@ cli/
 tests/
 coverage/
 dist/*.map
-src/
 
 jest.config.ts
 .eslintignore
 .eslintrc.json
 .project
-tsconfig.json
 cspell.json
