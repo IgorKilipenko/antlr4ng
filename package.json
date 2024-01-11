@@ -1,12 +1,9 @@
 {
     "name": "antlr4ng",
-    "version": "2.0.5",
-    "type": "module",
-    "description": "Alternative JavaScript/TypeScript runtime for ANTLR4",
-    "main": "dist/antlr4.cjs",
-    "module": "dist/antlr4.mjs",
-    "types": "dist/index.d.ts",
-    "repository": "https://github.com/mike-lischke/antlr4ng",
+    "version": "3.0.0-dev.1",
+    "description": "Fork of Alternative JavaScript/TypeScript runtime for ANTLR4",
+    "main": "dist/index",
+    "repository": "https://github.com/IgorKilipenko/antlr4ng",
     "keywords": [
         "lexer",
         "parser",
@@ -17,21 +14,21 @@
     ],
     "license": "BSD-3-Clause",
     "bugs": {
-        "url": "https://github.com/mike-lischke/antlr4ng/issues"
+        "url": "https://github.com/IgorKilipenko/antlr4ng/issues"
     },
-    "homepage": "https://github.com/mike-lischke/antlr4ng",
+    "homepage": "https://github.com/IgorKilipenko/antlr4ng",
     "peerDependencies": {
         "antlr4ng-cli": "1.0.7"
     },
     "devDependencies": {
         "@types/jest": "29.5.11",
-        "@types/node": "20.10.4",
-        "@typescript-eslint/eslint-plugin": "6.14.0",
-        "@typescript-eslint/parser": "6.14.0",
-        "esbuild": "0.19.9",
+        "@types/node": "20.10.8",
+        "@typescript-eslint/eslint-plugin": "6.18.1",
+        "@typescript-eslint/parser": "6.18.1",
+        "esbuild": "0.19.11",
         "eslint": "8.56.0",
         "eslint-plugin-import": "2.29.1",
-        "eslint-plugin-jsdoc": "46.9.1",
+        "eslint-plugin-jsdoc": "48.0.2",
         "eslint-plugin-prefer-arrow": "1.2.3",
         "jest": "29.7.0",
         "ts-jest": "29.1.1",
@@ -39,15 +36,12 @@
         "typescript": "5.3.3"
     },
     "scripts": {
-        "prepublishOnly": "npm run build-minified && npm run test",
-        "tsc": "tsc --watch",
-        "build": "npm run generate-test-parser && tsc && npm run build-cjs && npm run build-mjs",
-        "build-minified": "npm run generate-test-parser && tsc && npm run build-cjs-minified && npm run build-mjs-minified",
-        "build-bundle": "esbuild ./src/index.js --main-fields=module,main --bundle --sourcemap",
-        "build-mjs": "npm run build-bundle -- --outfile=dist/antlr4.mjs --format=esm",
-        "build-mjs-minified": "npm run build-mjs -- --minify",
-        "build-cjs": "npm run build-bundle -- --outfile=dist/antlr4.cjs --format=cjs",
-        "build-cjs-minified": "npm run build-cjs -- --minify",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "prepublishOnly": "npm run build && npm run test",
+        "lint": "eslint ./src --ext .ts",
+        "build": "npm run generate-test-parser && npm run compile",
         "full-test": "npm run test && npm run run-benchmarks",
         "test": "node --no-warnings --experimental-vm-modules node_modules/jest/bin/jest.js --no-coverage",
         "generate-test-parser": "node cli/index.js -Dlanguage=TypeScript -o tests/benchmarks/generated -visitor -listener -Xexact-output-dir tests/benchmarks/MySQLLexer.g4 tests/benchmarks/MySQLParser.g4",
@@ -55,10 +49,5 @@
         "run-benchmarks": "node --no-warnings --experimental-vm-modules  --loader ts-node/esm tests/benchmarks/run-benchmarks.ts",
         "profile benchmarks": "node --no-warnings --experimental-vm-modules --prof --loader ts-node/esm tests/benchmarks/run-benchmarks.ts",
         "process profile tick file": " node --prof-process isolate-0x130008000-75033-v8.log > processed.txt"
-    },
-    "exports": {
-        "types": "./dist/index.d.ts",
-        "require": "./dist/antlr4.cjs",
-        "import": "./dist/antlr4.mjs"
     }
 }
